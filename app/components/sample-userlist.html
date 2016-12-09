@@ -1,0 +1,46 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="sample-graphql.html">
+
+<dom-module id="sample-userlist">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <table>
+      <tr><td>UID</td><td>Lastname</td></tr>
+      <template is="dom-repeat" items="{{data.users}}">
+        <tr><td>{{item.uid}}</td><td>{{item.lastname}}</td></tr>
+      </template>
+    </table>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'sample-userlist',
+
+      behaviors: [Kapton.graphql(Kapton.USERS_LIST, 'options')],
+
+      properties: {
+
+        limit: Number,
+
+        data: Object,
+
+        options: {
+          type: Object,
+          computed: '_computeOptions(limit)',
+        },
+      },
+
+      _computeOptions: function(limit) {
+        return {
+          variables: {
+          },
+        };
+      },
+    });
+  </script>
+</dom-module>

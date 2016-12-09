@@ -1,0 +1,49 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="sample-graphql.html">
+
+<dom-module id="sample-adduser">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div class="">
+      <form id="userForm" is="iron-form">
+        <paper-input name="uid" label="UID"></paper-input>
+        <paper-input name="lastname" label="Lastname"></paper-input>
+      </form>
+      <paper-button raised on-tap="_create">Create</paper-button>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'sample-adduser',
+
+      behaviors: [Kapton.graphql(Kapton.ADD_USER)],
+
+      _create: function(e) {
+        var variables = this.$.userForm.serialize();
+
+        this.mutate({
+          variables: variables,
+          resultBehaviors: [
+            {
+              type: 'ARRAY_INSERT',
+              resultPath: ['addUser'],
+              storePath: ['ROOT_QUERY', 'users'],
+              where: 'APPEND',
+            }
+          ]
+        }).then(function(res) {
+          this.$.userForm.reset();
+        }.bind(this));
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,35 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="sample-userlist.html">
+<link rel="import" href="sample-adduser.html">
+
+<dom-module id="sample-app">
+  <template>
+    <style>
+      :host {
+        font-family: Roboto, sans-serif;
+        display: block;
+      }
+    </style>
+
+    <h1>Kapton Sample</h1>
+    <paper-input id="limit" type="number" value="{{limit}}"></paper-input>
+    <sample-userlist limit="{{limit}}"></sample-userlist>
+    <sample-adduser></sample-adduser>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'sample-app',
+
+      properties: {
+        limit: {
+          type: Number,
+          value: 10
+        }
+      }
+
+    });
+  </script>
+</dom-module>
