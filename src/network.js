@@ -3,11 +3,21 @@ import { graphql } from 'graphql';
 import { print } from 'graphql-tag/printer';
 
 class FakeNetworkInterface {
+  constructor(options = {}) {
+    this.options = Object.assign({}, { latency: 1000 }, options);
+  }
+
   query(request) {
-    return graphql(Schema, print(request.query), null, null, request.variables);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, this.options.latency);
+    }).then(() => {
+      return graphql(Schema, print(request.query), null, null, request.variables);
+    });;
   }
 };
 
-export function createFakeNetworkInterface() {
-  return new FakeNetworkInterface();
+export function createFakeNetworkInterface(options) {
+  return new FakeNetworkInterface(options);
 };
