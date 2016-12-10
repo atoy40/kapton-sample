@@ -14,8 +14,7 @@
     </style>
 
     <h1>Kapton Sample</h1>
-    <paper-input id="limit" type="number" value="{{limit}}"></paper-input>
-    <sample-userlist limit="{{limit}}"></sample-userlist>
+    <sample-userlist></sample-userlist>
     <sample-adduser></sample-adduser>
 
   </template>
@@ -24,10 +23,6 @@
       is: 'sample-app',
 
       properties: {
-        limit: {
-          type: Number,
-          value: 10
-        }
       }
 
     });

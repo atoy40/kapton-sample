@@ -7,10 +7,14 @@
       :host {
         display: block;
       }
+      tr.title {
+        font-weight: bold;
+      }
     </style>
 
+    <h2>User list</h2>
     <table>
-      <tr><td>UID</td><td>Lastname</td></tr>
+      <tr class="title"><td>UID</td><td>Lastname</td></tr>
       <template is="dom-repeat" items="{{data.users}}">
         <tr><td>{{item.uid}}</td><td>{{item.lastname}}</td></tr>
       </template>
@@ -31,15 +35,10 @@
 
         options: {
           type: Object,
-          computed: '_computeOptions(limit)',
+          value: function() {
+            return {};
+          }
         },
-      },
-
-      _computeOptions: function(limit) {
-        return {
-          variables: {
-          },
-        };
       },
     });
   </script>
