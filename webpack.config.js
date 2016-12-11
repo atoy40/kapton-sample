@@ -7,7 +7,7 @@ var entry =  [];
 if(process.env.NODE_ENV === "production") {
   plugins.push(new webpack.optimize.UglifyJsPlugin({minimize: true, comments: false}));
 } else {
-  entry.push('webpack-dev-server/client?http://ah.univ-pau.fr:3000');
+  entry.push('webpack-dev-server/client?http://localhost:3000');
   entry.push('webpack/hot/only-dev-server');
 }
 

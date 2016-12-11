@@ -15,10 +15,11 @@
     <div class="">
       <h2>Create user</h2>
       <form id="userForm" is="iron-form">
-        <paper-input name="uid" label="UID"></paper-input>
         <paper-input name="lastname" label="Lastname"></paper-input>
+        <paper-input name="firstname" label="Firstname"></paper-input>
+        <paper-input name="age" label="Age" type="number"></paper-input>
       </form>
-      <paper-button raised on-tap="_create">Create</paper-button>
+      <paper-button id="createBtn" raised on-tap="_create">Create</paper-button>
     </div>
 
   </template>
@@ -29,10 +30,19 @@
       behaviors: [Kapton.graphql(Kapton.ADD_USER)],
 
       _create: function(e) {
-        var variables = this.$.userForm.serialize();
-
+        this.$.createBtn.disabled = true;
+        var newUser = this.$.userForm.serialize();
         this.mutate({
-          variables: variables,
+          variables: { user: newUser },
+          optimisticResponse: {
+            addUser: {
+              __typename: 'User',
+              uid: "-----",
+              lastname: newUser.lastname,
+              firstname: newUser.firstname,
+              age: newUser.age,
+            },
+          },
           resultBehaviors: [
             {
               type: 'ARRAY_INSERT',
@@ -41,8 +51,15 @@
               where: 'APPEND',
             }
           ]
-        }).then(function(res) {
+        })
+        .then(function(res) {
           this.$.userForm.reset();
+          this.$.createBtn.disabled = false;
+          this.fire('message', { msg: 'User added with UID "'+res.data.addUser.uid+'"'});
+        }.bind(this))
+        .catch(function(err) {
+          this.$.createBtn.disabled = false;
+          this.fire('message', { msg: 'Unable to add user'});
         }.bind(this));
       }
     });

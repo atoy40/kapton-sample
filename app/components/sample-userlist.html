@@ -1,4 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="sample-graphql.html">
 
 <dom-module id="sample-userlist">
@@ -7,16 +9,28 @@
       :host {
         display: block;
       }
+      table {
+        width: 100%;
+      }
       tr.title {
         font-weight: bold;
       }
+      tr.deleted {
+        color: var(--paper-red-700);
+      }
     </style>
 
-    <h2>User list</h2>
+    <h2>User list <paper-icon-button id="reloadBtn" icon="refresh" on-tap="_refresh"></paper-icon-button></h2>
     <table>
-      <tr class="title"><td>UID</td><td>Lastname</td></tr>
+      <tr class="title"><td>UID</td><td>Lastname</td><td>Firstname</td><td>Age</td></tr>
       <template is="dom-repeat" items="{{data.users}}">
-        <tr><td>{{item.uid}}</td><td>{{item.lastname}}</td></tr>
+        <tr>
+          <td>{{item.uid}}</td>
+          <td>{{item.lastname}}</td>
+          <td>{{item.firstname}}</td>
+          <td>{{item.age}}</td>
+          <td><paper-icon-button icon="delete" on-tap="_delete"></paper-icon-button></td>
+        </tr>
       </template>
     </table>
 
@@ -25,11 +39,12 @@
     Polymer({
       is: 'sample-userlist',
 
-      behaviors: [Kapton.graphql(Kapton.USERS_LIST, 'options')],
+      behaviors: [
+        Kapton.graphql(Kapton.USERS_LIST, 'options'),
+        Kapton.graphql(Kapton.DEL_USER, { name: "_delUser"})
+      ],
 
       properties: {
-
-        limit: Number,
 
         data: Object,
 
@@ -40,6 +55,36 @@
           }
         },
       },
+
+      _refresh: function() {
+        if (this.data) {
+          this.$.reloadBtn.disabled = true;
+          this.data.refetch().then(function(res) {
+            this.$.reloadBtn.disabled = false;
+            this.fire('message', { msg: 'Users data reloaded' });
+          }.bind(this));
+        }
+      },
+
+      _delete: function(e) {
+        var user = e.model.item;
+        this._delUser({
+          variables: { uid: user.uid },
+          resultBehaviors: [
+            {
+              type: 'ARRAY_DELETE',
+              dataId: 'User_'+user.uid,
+              storePath: ['ROOT_QUERY', 'users'],
+            },
+            {
+              type: 'DELETE',
+              dataId: 'User_'+user.uid,
+            }
+          ]
+        }).then(function(res) {
+          this.fire('message', { msg: 'User "'+res.data.delUser.uid+'" removed' });
+        }.bind(this));
+      }
     });
   </script>
 </dom-module>

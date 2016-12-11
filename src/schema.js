@@ -5,14 +5,24 @@ const schemaDefinition = `
   type User {
     uid: String!
     lastname: String!
+    firstname: String
+    age: Int
   }
 
   type RootQuery {
-    users(limit: Int): [User!]
+    users : [User!]
+    user(uid: String) : User
+  }
+
+  input UserInput {
+    lastname: String!
+    firstname: String
+    age: Int
   }
 
   type RootMutation {
-    addUser(uid: String!, lastname: String!) : User
+    addUser(user: UserInput!) : User
+    delUser(uid: String!) : User
   }
 
   schema {
@@ -22,15 +32,35 @@ const schemaDefinition = `
 `;
 
 const resolveFunctions = {
+
   RootQuery: {
-    users(_, { limit = 5 }, context) {
-      return Users.slice(0, limit);
+    users(_, {}, context) {
+      return Users;
     },
+    user(_, { uid }, context) {
+      return Users.find(user => user.uid === uid);
+    }
   },
   RootMutation: {
-    addUser(_, user, context) {
-      Users.push(user);
-      return user;
+    addUser(_, { user }, context) {
+      let uid = Math.random().toString(36).substring(2,7);
+
+      if (user.lastname.length < 1) {
+        throw new Error("Lastname required.");
+      }
+
+      Users.push(Object.assign(user, { uid }));
+
+      return Users.find(user => user.uid === uid);
+    },
+    delUser(_, { uid }, context) {
+      let userIdx = Users.findIndex(user => user.uid === uid);
+
+      if (userIdx < 0) {
+        throw new Error("No user to delete");
+      }
+      
+      return Users.splice(userIdx, 1)[0];
     }
   }
 };

@@ -7,7 +7,7 @@ import { createFakeNetworkInterface } from './network';
 const apolloClient = new ApolloClient({
   // In a normal app, you'll probably use createNetworkInterface instead.
   // This demo app use an in-client graphql enpoint
-  networkInterface: createFakeNetworkInterface({ latency: 2000 }),
+  networkInterface: createFakeNetworkInterface({ latency: 1000 }),
   // define unique id of User type.
   dataIdFromObject: (result) => {
     if (result.__typename === "User") {
@@ -22,22 +22,34 @@ const graphql = Kapton({apolloClient});
 
 // Get a query document
 const USERS_LIST = gql`
-  query myQuery {
+  query usersList {
     users {
       uid
       lastname
+      firstname
+      age
     }
   }
 `;
 
 // Get a mutation document
 const ADD_USER = gql`
-  mutation myMutation($uid: String!, $lastname: String!) {
-    addUser(uid: $uid, lastname: $lastname) {
+  mutation addUser($user: UserInput!) {
+    addUser(user: $user) {
       uid
       lastname
+      firstname
+      age
     }
   }
 `;
 
-export { graphql, USERS_LIST, ADD_USER };
+const DEL_USER = gql`
+  mutation delUser($uid: String!) {
+    delUser(uid: $uid) {
+      uid
+    }
+  }
+`;
+
+export { graphql, USERS_LIST, ADD_USER, DEL_USER };
