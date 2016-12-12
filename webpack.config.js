@@ -3,10 +3,13 @@ var webpack = require('webpack');
 
 var plugins = [new webpack.HotModuleReplacementPlugin()];
 var entry =  [];
+var devtool;
 
 if(process.env.NODE_ENV === "production") {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({minimize: true, comments: false}));
+  devtool = undefined;
+  plugins.push(new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false }, comments: false}));
 } else {
+  devtool = 'eval';
   entry.push('webpack-dev-server/client?http://localhost:3000');
   entry.push('webpack/hot/only-dev-server');
 }
@@ -14,7 +17,7 @@ if(process.env.NODE_ENV === "production") {
 entry.push('./src/index');
 
 module.exports = {
-  devtool: 'eval',
+  devtool: devtool,
   entry: entry,
   output: {
     libraryTarget: "var",

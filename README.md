@@ -23,5 +23,6 @@ Go to http://localhost:3000
 ## Code layout
 
 * src : contains javascript code webpacked into a single file. This include
-Apollo client, Kapton and GraphQL endpoint and schema.
+Apollo client, Kapton and GraphQL endpoint and schema. In a normal app, the
+schema part (data.js and schema.js) would be only server side.
 * app : contains Polymer elements.
