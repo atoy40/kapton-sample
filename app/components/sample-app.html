@@ -40,7 +40,7 @@
     </app-header>
 
     <sample-adduser class="card" edit-uid="{{editedUser}}"></sample-adduser>
-    <sample-userlist class="card" on-select-user="_editUser"></sample-userlist>
+    <sample-userlist class="card" on-select-user="_editUser" on-user-deleted="_onUserDeleted"></sample-userlist>
 
   </template>
 
@@ -60,6 +60,12 @@
 
       _editUser: function(e) {
         this.editedUser = e.detail.uid;
+      },
+
+      _onUserDeleted: function(e) {
+        if (this.editedUser === e.detail.uid) {
+          this.editedUser = undefined;
+        }
       },
 
       _displayMessage: function(e) {
