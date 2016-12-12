@@ -24,10 +24,10 @@
       <h2>Create or update user</h2>
       <form id="userForm" is="iron-form">
         <div class="layout horizontal">
-          <paper-input class="flex" label="UID" value="{{editUid}}" disabled placeholder="New user"></paper-input>
+          <paper-input style="width: 100px;" label="UID" value="{{editUid}}" disabled placeholder="New user"></paper-input>
           <paper-input class="flex" name="lastname" label="Lastname" required placeholder="Set lastname"></paper-input>
           <paper-input class="flex" name="firstname" label="Firstname" required placeholder="Set firstname"></paper-input>
-          <paper-input class="flex" name="age" label="Age" type="number" min="1" max="120" required placeholder="Set age"></paper-input>
+          <paper-input style="width: 100px;" name="age" label="Age" type="number" min="1" max="120" required placeholder="Set age"></paper-input>
         </div>
       </form>
       <paper-button id="createBtn" raised on-tap="_create">Validate</paper-button>
