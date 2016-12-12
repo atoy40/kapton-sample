@@ -20,7 +20,8 @@ const apolloClient = new ApolloClient({
 // Get a behavior "factory"
 const graphql = Kapton({apolloClient});
 
-// Get a query document
+// Queries and mutations
+
 const USERS_LIST = gql`
   query usersList {
     users {
@@ -32,10 +33,31 @@ const USERS_LIST = gql`
   }
 `;
 
-// Get a mutation document
+const SINGLE_USER = gql`
+  query usersList($uid: String!) {
+    user(uid: $uid) {
+      uid
+      lastname
+      firstname
+      age
+    }
+  }
+`;
+
 const ADD_USER = gql`
   mutation addUser($user: UserInput!) {
     addUser(user: $user) {
+      uid
+      lastname
+      firstname
+      age
+    }
+  }
+`;
+
+const UPDATE_USER = gql`
+  mutation updateUser($uid: String!, $user: UserInput!) {
+    updateUser(uid: $uid, user: $user) {
       uid
       lastname
       firstname
@@ -52,4 +74,4 @@ const DEL_USER = gql`
   }
 `;
 
-export { graphql, USERS_LIST, ADD_USER, DEL_USER };
+export { graphql, USERS_LIST, SINGLE_USER, UPDATE_USER, ADD_USER, DEL_USER };

@@ -8,11 +8,13 @@ class FakeNetworkInterface {
   }
 
   query(request) {
+    console.log("[apollo networking start]");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
       }, this.options.latency);
     }).then(() => {
+      console.log("[apollo networking done]");
       return graphql(Schema, print(request.query), null, null, request.variables);
     });;
   }

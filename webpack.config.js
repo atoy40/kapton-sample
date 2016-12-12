@@ -8,6 +8,7 @@ var devtool;
 if(process.env.NODE_ENV === "production") {
   devtool = undefined;
   plugins.push(new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false }, comments: false}));
+  plugins.push(new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }));
 } else {
   devtool = 'eval';
   entry.push('webpack-dev-server/client?http://localhost:3000');

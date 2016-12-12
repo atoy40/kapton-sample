@@ -9,6 +9,10 @@
       :host {
         display: block;
       }
+      a {
+        color: var(--accent-color);
+        text-decoration: none;
+      }
       table {
         width: 100%;
       }
@@ -26,7 +30,7 @@
       <tr class="title"><td>UID</td><td>Lastname</td><td>Firstname</td><td>Age</td></tr>
       <template is="dom-repeat" items="{{users}}">
         <tr class$="{{_userRowClass(item.deleting)}}">
-          <td style="font-family: monospace;">{{item.user.uid}}</td>
+          <td style="font-family: monospace;"><a href="#" on-tap="_selectUser">{{item.user.uid}}</a></td>
           <td>{{item.user.lastname}}</td>
           <td>{{item.user.firstname}}</td>
           <td>{{item.user.age}}</td>
@@ -65,6 +69,11 @@
 
       _userRowClass: function(deleted) {
         return deleted ? "deleted" : "";
+      },
+
+      _selectUser: function(e) {
+        this.fire("select-user", { uid: e.model.item.user.uid });
+        e.preventDefault();
       },
 
       _refresh: function() {

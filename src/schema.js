@@ -22,6 +22,7 @@ const schemaDefinition = `
 
   type RootMutation {
     addUser(user: UserInput!) : User
+    updateUser(uid: String!, user: UserInput!) : User
     delUser(uid: String!) : User
   }
 
@@ -53,13 +54,24 @@ const resolveFunctions = {
 
       return Users.find(user => user.uid === uid);
     },
+    updateUser(_, { uid, user }, context) {
+      let currentUser = Users.find(user => user.uid === uid);
+
+      if (!currentUser) {
+        throw new Error("Unable to find user.");
+      }
+
+      Object.assign(currentUser, user);
+
+      return currentUser;
+    },
     delUser(_, { uid }, context) {
       let userIdx = Users.findIndex(user => user.uid === uid);
 
       if (userIdx < 0) {
         throw new Error("No user to delete");
       }
-      
+
       return Users.splice(userIdx, 1)[0];
     }
   }
