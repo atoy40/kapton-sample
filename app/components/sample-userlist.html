@@ -1,0 +1,106 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="sample-graphql.html">
+
+<dom-module id="sample-userlist">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      table {
+        width: 100%;
+      }
+      tr.title {
+        font-weight: bold;
+      }
+      tr.deleted {
+        text-decoration: line-through;
+        color: var(--paper-red-700);
+      }
+    </style>
+
+    <h2>User list <paper-icon-button id="reloadBtn" icon="refresh" on-tap="_refresh"></paper-icon-button></h2>
+    <table>
+      <tr class="title"><td>UID</td><td>Lastname</td><td>Firstname</td><td>Age</td></tr>
+      <template is="dom-repeat" items="{{users}}">
+        <tr class$="{{_userRowClass(item.deleting)}}">
+          <td style="font-family: monospace;">{{item.user.uid}}</td>
+          <td>{{item.user.lastname}}</td>
+          <td>{{item.user.firstname}}</td>
+          <td>{{item.user.age}}</td>
+          <td><paper-icon-button icon="delete" on-tap="_delete" disabled$="{{item.deleting}}"></paper-icon-button></td>
+        </tr>
+      </template>
+    </table>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'sample-userlist',
+
+      behaviors: [
+        Kapton.graphql(Kapton.USERS_LIST),
+        Kapton.graphql(Kapton.DEL_USER, { name: "delete"})
+      ],
+
+      properties: {
+
+        // raw graphql data
+        data: Object,
+
+        // user data extracted and decorated
+        users: {
+          type: Array,
+          computed: '_generateUsers(data)',
+        },
+      },
+
+      _generateUsers: function(data) {
+        return data.users.map(function(user) {
+          return { user: user, deleting: false };
+        });
+      },
+
+      _userRowClass: function(deleted) {
+        return deleted ? "deleted" : "";
+      },
+
+      _refresh: function() {
+        if (this.data) {
+          this.$.reloadBtn.disabled = true;
+          this.data.refetch().then(function(res) {
+            this.$.reloadBtn.disabled = false;
+            this.fire('message', { msg: 'Users data reloaded' });
+          }.bind(this));
+        }
+      },
+
+      _delete: function(e) {
+        e.model.set('item.deleting', true);
+        var user = e.model.item.user;
+        this.delete({
+          variables: { uid: user.uid },
+          resultBehaviors: [
+            {
+              type: 'ARRAY_DELETE',
+              dataId: 'User_'+user.uid,
+              storePath: ['ROOT_QUERY', 'users'],
+            },
+            {
+              type: 'DELETE',
+              dataId: 'User_'+user.uid,
+            }
+          ]
+        })
+        .then(function(res) {
+          this.fire('message', { msg: 'User "'+res.data.delUser.uid+'" removed' });
+        }.bind(this))
+        .catch(function(err) {
+          this.fire('message', { msg: 'User "'+user.uid+'" not found' });
+        }.bind(this));
+      }
+    });
+  </script>
+</dom-module>

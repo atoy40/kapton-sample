@@ -1,0 +1,64 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/paper-styles/default-theme.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="sample-userlist.html">
+<link rel="import" href="sample-adduser.html">
+
+<dom-module id="sample-app">
+  <template>
+    <style  is="custom-style" include="iron-flex">
+      :host {
+        display: block;
+      }
+
+      app-header {
+        background-color: var(--accent-color);
+        color: white;
+      }
+
+      .card {
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        padding: 16px;
+        margin: 24px;
+        border-radius: 5px;
+        background-color: #fff;
+      }
+    </style>
+
+    <paper-toast id="toast"></paper-toast>
+
+    <app-header condenses reveals>
+      <app-toolbar>
+        <div main-title>Kapton Sample</div>
+      </app-toolbar>
+    </app-header>
+
+    <sample-adduser class="card"></sample-adduser>
+    <sample-userlist class="card"></sample-userlist>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'sample-app',
+
+      properties: {
+      },
+
+      listeners: {
+        'message': '_displayMessage'
+      },
+
+      _displayMessage: function(e) {
+        this.$.toast.text = e.detail.msg;
+        this.$.toast.open();
+      },
+    });
+  </script>
+</dom-module>

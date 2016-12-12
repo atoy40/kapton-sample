@@ -1,0 +1,78 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="sample-graphql.html">
+
+<dom-module id="sample-adduser">
+  <template>
+    <style is="custom-style" include="iron-flex">
+      :host {
+        display: block;
+      }
+      paper-input {
+        padding: 5px;
+      }
+      paper-button {
+        color: white;
+        background-color: var(--accent-color);
+      }
+    </style>
+
+    <div class="">
+      <h2>Create user</h2>
+      <form id="userForm" is="iron-form">
+        <div class="layout horizontal">
+          <paper-input class="flex" name="lastname" label="Lastname" required></paper-input>
+          <paper-input class="flex" name="firstname" label="Firstname" required></paper-input>
+          <paper-input class="flex" name="age" label="Age" type="number" min="1" max="120" required></paper-input>
+        </div>
+      </form>
+      <paper-button id="createBtn" raised on-tap="_create">Create</paper-button>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'sample-adduser',
+
+      behaviors: [ Kapton.graphql(Kapton.ADD_USER) ],
+
+      _create: function(e) {
+        console.log(this.$.userForm.validate());
+        this.$.createBtn.disabled = true;
+        var newUser = this.$.userForm.serialize();
+        this.mutate({
+          variables: { user: newUser },
+          optimisticResponse: {
+            addUser: {
+              __typename: 'User',
+              uid: "-----",
+              lastname: newUser.lastname,
+              firstname: newUser.firstname,
+              age: newUser.age,
+            },
+          },
+          resultBehaviors: [
+            {
+              type: 'ARRAY_INSERT',
+              resultPath: ['addUser'],
+              storePath: ['ROOT_QUERY', 'users'],
+              where: 'APPEND',
+            }
+          ]
+        })
+        .then(function(res) {
+          this.$.userForm.reset();
+          this.$.createBtn.disabled = false;
+          this.fire('message', { msg: 'User added with UID "'+res.data.addUser.uid+'"'});
+        }.bind(this))
+        .catch(function(err) {
+          this.$.createBtn.disabled = false;
+          this.fire('message', { msg: 'Unable to add user'});
+        }.bind(this));
+      }
+    });
+  </script>
+</dom-module>
