@@ -65,11 +65,9 @@
       },
 
       _computeQueryOptions: function(uid) {
-        console.log(uid);
-        this.$.userForm.reset();
         return  {
           variables: { uid: uid },
-          forceFetch: true,
+          //forceFetch: true,
           skip: !uid,
         };
       },
