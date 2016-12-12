@@ -14,9 +14,16 @@
       paper-input {
         padding: 5px;
       }
+      paper-input[disabled] {
+        --paper-input-container-color: var(--accent-color);
+        --paper-input-container-input-color: var(--accent-color);
+        --paper-input-container-disabled: {
+          opacity: 1.0;
+        }
+      }
       paper-button#createBtn {
         color: white;
-        background-color: var(--accent-color);
+        background-color: var(--primary-color);
       }
     </style>
 

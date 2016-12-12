@@ -21,7 +21,9 @@
       }
       tr.deleted {
         text-decoration: line-through;
-        color: var(--paper-red-700);
+      }
+      paper-icon-button {
+        color: var(--primary-color);
       }
     </style>
 
@@ -35,7 +37,7 @@
           <td>{{item.user.lastname}}</td>
           <td>{{item.user.firstname}}</td>
           <td>{{item.user.age}}</td>
-          <td><paper-icon-button icon="delete" on-tap="_delete" disabled$="{{item.deleting}}"></paper-icon-button></td>
+          <td style="width: 30px;"><paper-icon-button icon="delete" on-tap="_delete" disabled$="{{item.deleting}}"></paper-icon-button></td>
         </tr>
       </template>
     </table>

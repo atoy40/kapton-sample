@@ -18,7 +18,7 @@
       }
 
       app-header {
-        background-color: var(--accent-color);
+        background-color: var(--primary-color);
         color: white;
       }
 
@@ -40,7 +40,7 @@
     </app-header>
 
     <sample-userform class="card" edit-uid="{{editedUser}}"></sample-userform>
-    <sample-userlist class="card" on-select-user="_editUser" on-user-deleted="_onUserDeleted"></sample-userlist>
+    <sample-userlist class="card" on-select-user="_onSelectUser" on-user-deleted="_onUserDeleted"></sample-userlist>
 
   </template>
 
@@ -49,17 +49,19 @@
       is: 'sample-app',
 
       properties: {
-
         editedUser: String,
-
       },
 
       listeners: {
         'message': '_displayMessage'
       },
 
-      _editUser: function(e) {
-        this.editedUser = e.detail.uid;
+      _onSelectUser: function(e) {
+        if (this.editedUser === e.detail.uid) {
+          this.editedUser = undefined;
+        } else {
+          this.editedUser = e.detail.uid;
+        }
       },
 
       _onUserDeleted: function(e) {
