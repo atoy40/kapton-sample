@@ -96,7 +96,10 @@
       },
 
       _create: function(e) {
-        console.log(this.$.userForm.validate());
+        if (!this.$.userForm.validate()) {
+          return this.fire('message', { msg: 'Check input'});
+        }
+
         var promise;
 
         this.$.createBtn.disabled = true;
