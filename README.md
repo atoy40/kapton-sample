@@ -5,9 +5,12 @@ into Polymer) to talk with a GraphQL server.
 
 In this application, the GraphQL enpoint is embedded into the client application
 itself. An Apollo NetworkInterface has been written to simulate network and
-latency.
+latency. Data are in-memory only, so any reload will reset it.
 
-The GrapĥQL schema is created using graphql-tools from the Apollo project.
+The GraphQL schema is created using graphql-tools from the Apollo project.
+
+A version is running at https://atoy40.github.io/kapton-sample/ (simulating a
+1000ms network latency to demonstrate optimistic UI features of Apollo)
 
 ## Run the application
 
