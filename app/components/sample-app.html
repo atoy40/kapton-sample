@@ -39,7 +39,7 @@
       </app-toolbar>
     </app-header>
 
-    <sample-adduser class="card"></sample-adduser>
+    <sample-adduser class="card" edit-uid="{{editedUser}}"></sample-adduser>
     <sample-userlist class="card" on-select-user="_editUser"></sample-userlist>
 
   </template>
@@ -49,6 +49,9 @@
       is: 'sample-app',
 
       properties: {
+
+        editedUser: String,
+
       },
 
       listeners: {
@@ -56,7 +59,7 @@
       },
 
       _editUser: function(e) {
-        console.log(e.detail);
+        this.editedUser = e.detail.uid;
       },
 
       _displayMessage: function(e) {

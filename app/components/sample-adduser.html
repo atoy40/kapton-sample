@@ -14,22 +14,24 @@
       paper-input {
         padding: 5px;
       }
-      paper-button {
+      paper-button#createBtn {
         color: white;
         background-color: var(--accent-color);
       }
     </style>
 
     <div class="">
-      <h2>Create user</h2>
+      <h2>Create or update user</h2>
       <form id="userForm" is="iron-form">
         <div class="layout horizontal">
+          <paper-input class="flex" label="UID" value="{{editUid}}" disabled placeholder="New user"></paper-input>
           <paper-input class="flex" name="lastname" label="Lastname" required placeholder="Set lastname"></paper-input>
           <paper-input class="flex" name="firstname" label="Firstname" required placeholder="Set firstname"></paper-input>
           <paper-input class="flex" name="age" label="Age" type="number" min="1" max="120" required placeholder="Set age"></paper-input>
         </div>
       </form>
-      <paper-button id="createBtn" raised on-tap="_create">Create</paper-button>
+      <paper-button id="createBtn" raised on-tap="_create">Validate</paper-button>
+      <paper-button id="resetBtn" raised on-tap="_reset">Reset</paper-button>
     </div>
 
   </template>
@@ -37,38 +39,112 @@
     Polymer({
       is: 'sample-adduser',
 
-      behaviors: [ Kapton.graphql(Kapton.ADD_USER) ],
+      behaviors: [
+        Kapton.graphql(Kapton.SINGLE_USER, 'options'),
+        Kapton.graphql(Kapton.ADD_USER, { name: 'createUser' }),
+        Kapton.graphql(Kapton.UPDATE_USER, { name: 'updateUser' }),
+      ],
+
+      properties: {
+
+        editUid: {
+          type: String,
+          notify: true,
+        },
+
+        options: {
+          type: Object,
+          computed: '_computeQueryOptions(editUid)'
+        },
+
+        data: {
+          type: Object,
+          observer: '_dataChanged'
+        }
+
+      },
+
+      _computeQueryOptions: function(uid) {
+        console.log(uid);
+        this.$.userForm.reset();
+        return  {
+          variables: { uid: uid },
+          forceFetch: true,
+          skip: !uid,
+        };
+      },
+
+      _dataChanged: function(data) {
+        if (data.user) {
+          this.$$('paper-input[name=lastname]').value = data.user.lastname;
+          this.$$('paper-input[name=firstname]').value = data.user.firstname;
+          this.$$('paper-input[name=age]').value = data.user.age;
+        }
+      },
+
+      _reset: function(e) {
+        this.editUid = undefined;
+        this.$.userForm.reset();
+      },
 
       _create: function(e) {
         console.log(this.$.userForm.validate());
+        var promise;
+
         this.$.createBtn.disabled = true;
         var newUser = this.$.userForm.serialize();
-        this.mutate({
-          variables: { user: newUser },
-          optimisticResponse: {
-            addUser: {
-              __typename: 'User',
-              uid: "-----",
-              lastname: newUser.lastname,
-              firstname: newUser.firstname,
-              age: newUser.age,
-            },
-          },
-          resultBehaviors: [
-            {
-              type: 'ARRAY_INSERT',
-              resultPath: ['addUser'],
-              storePath: ['ROOT_QUERY', 'users'],
-              where: 'APPEND',
+
+        if (this.editUid) {
+          // update
+          promise = this.updateUser({
+            variables: { uid: this.editUid, user: newUser },
+            optimisticResponse: {
+              updateUser: {
+                __typename: 'User',
+                uid: this.editUid,
+                lastname: newUser.lastname,
+                firstname: newUser.firstname,
+                age: newUser.age,
+              },
             }
-          ]
-        })
-        .then(function(res) {
+          })
+          .then(function(res) {
+            this.fire('message', { msg: 'User "'+res.data.updateUser.uid+'" updated'});
+            this.editUid = undefined;
+          }.bind(this));
+        } else {
+          // create
+          promise = this.createUser({
+            variables: { user: newUser },
+            optimisticResponse: {
+              addUser: {
+                __typename: 'User',
+                uid: "-----",
+                lastname: newUser.lastname,
+                firstname: newUser.firstname,
+                age: newUser.age,
+              },
+            },
+            resultBehaviors: [
+              {
+                type: 'ARRAY_INSERT',
+                resultPath: ['addUser'],
+                storePath: ['ROOT_QUERY', 'users'],
+                where: 'APPEND',
+              }
+            ]
+          })
+          .then(function(res) {
+            this.fire('message', { msg: 'User added with UID "'+res.data.addUser.uid+'"'});
+          }.bind(this))
+        }
+
+        promise.then(function(res) {
           this.$.userForm.reset();
           this.$.createBtn.disabled = false;
-          this.fire('message', { msg: 'User added with UID "'+res.data.addUser.uid+'"'});
         }.bind(this))
         .catch(function(err) {
+          console.log(err);
           this.$.createBtn.disabled = false;
           this.fire('message', { msg: 'Unable to add user'});
         }.bind(this));
