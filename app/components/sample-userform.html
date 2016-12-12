@@ -5,7 +5,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="sample-graphql.html">
 
-<dom-module id="sample-adduser">
+<dom-module id="sample-userform">
   <template>
     <style is="custom-style" include="iron-flex">
       :host {
@@ -37,7 +37,7 @@
   </template>
   <script>
     Polymer({
-      is: 'sample-adduser',
+      is: 'sample-userform',
 
       behaviors: [
         Kapton.graphql(Kapton.SINGLE_USER, 'options'),
