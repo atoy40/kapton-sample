@@ -1,7 +1,7 @@
 # Kapton sample
 
-This is a small Polymer application using Kapton (an Apollo client integration)
-to talk with a graphql server.
+This is a small Polymer application using Kapton (an Apollo client integration
+into Polymer) to talk with a GraphQL server.
 
 In this application, the GraphQL enpoint is embedded into the client application
 itself. An Apollo NetworkInterface has been written to simulate network and

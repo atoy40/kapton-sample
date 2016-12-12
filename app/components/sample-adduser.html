@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -6,18 +7,27 @@
 
 <dom-module id="sample-adduser">
   <template>
-    <style>
+    <style is="custom-style" include="iron-flex">
       :host {
         display: block;
+      }
+      paper-input {
+        padding: 5px;
+      }
+      paper-button {
+        color: white;
+        background-color: var(--accent-color);
       }
     </style>
 
     <div class="">
       <h2>Create user</h2>
       <form id="userForm" is="iron-form">
-        <paper-input name="lastname" label="Lastname"></paper-input>
-        <paper-input name="firstname" label="Firstname"></paper-input>
-        <paper-input name="age" label="Age" type="number"></paper-input>
+        <div class="layout horizontal">
+          <paper-input class="flex" name="lastname" label="Lastname" required></paper-input>
+          <paper-input class="flex" name="firstname" label="Firstname" required></paper-input>
+          <paper-input class="flex" name="age" label="Age" type="number" min="1" max="120" required></paper-input>
+        </div>
       </form>
       <paper-button id="createBtn" raised on-tap="_create">Create</paper-button>
     </div>
@@ -27,9 +37,10 @@
     Polymer({
       is: 'sample-adduser',
 
-      behaviors: [Kapton.graphql(Kapton.ADD_USER)],
+      behaviors: [ Kapton.graphql(Kapton.ADD_USER) ],
 
       _create: function(e) {
+        console.log(this.$.userForm.validate());
         this.$.createBtn.disabled = true;
         var newUser = this.$.userForm.serialize();
         this.mutate({
