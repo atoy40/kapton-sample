@@ -65,9 +65,12 @@
       },
 
       _computeQueryOptions: function(uid) {
+        if (uid === undefined) {
+          this.$.userForm.reset();
+        }
+
         return  {
           variables: { uid: uid },
-          //forceFetch: true,
           skip: !uid,
         };
       },

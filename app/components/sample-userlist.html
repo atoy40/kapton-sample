@@ -89,6 +89,8 @@
       _delete: function(e) {
         e.model.set('item.deleting', true);
         var user = e.model.item.user;
+        this.fire('user-deleted', { uid: user.uid });
+        
         this.delete({
           variables: { uid: user.uid },
           resultBehaviors: [
