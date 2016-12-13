@@ -17,7 +17,7 @@
     "graphql": "^0.8.2",
     "graphql-tag": "^1.1.2",
     "graphql-tools": "^0.8.3",
-    "kapton": "0.0.2",
+    "kapton": "0.0.3",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2"
   }
