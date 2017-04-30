@@ -29,11 +29,20 @@ module.exports = {
   },
   plugins: plugins,
   module: {
-    loaders: [{
-      test: /\.js$/,
-      loaders: ['babel-loader'],
-      //exclude: /(node_modules|bower_components)/,
-      include: path.join(__dirname, 'src')
-    }]
+    loaders: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        //include: path.join(__dirname, 'src')
+        query: { presets: [ 'es2015' ] },
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: /node_modules\/kapton/,
+        query: { plugins: [ 'transform-es2015-modules-commonjs' ] },
+      },
+    ]
   }
 };

@@ -3554,9 +3554,9 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.3.6"
 
-kapton@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/kapton/-/kapton-0.0.3.tgz#8d061458722da8a097e6469be24c5dae696e4021"
+kapton@atoy40/kapton#2.0rc:
+  version "2.0.0"
+  resolved "https://codeload.github.com/atoy40/kapton/tar.gz/0bfc8d1e5cbf510d90c0c9848e85fc13731e9c2a"
   dependencies:
     lodash.omit "^4.5.0"
 
@@ -5863,7 +5863,7 @@ ternary-stream@^2.0.1:
     merge-stream "^1.0.0"
     through2 "^2.0.1"
 
-"test-fixture@github:PolymerElements/test-fixture":
+test-fixture@PolymerElements/test-fixture:
   version "3.0.0-rc.1"
   resolved "https://codeload.github.com/PolymerElements/test-fixture/tar.gz/26118ef0467501c33c02316e7016a2837baba10f"
 
