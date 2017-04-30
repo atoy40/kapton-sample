@@ -1,24 +1,25 @@
 {
-  "name": "kapton-sample",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "bower install"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "apollo-client": "^0.5.18",
-    "babel-core": "^6.20.0",
-    "babel-loader": "^6.2.9",
-    "babel-preset-es2015": "^6.18.0",
-    "bower": "^1.8.0",
-    "graphql": "^0.8.2",
-    "graphql-tag": "^1.1.2",
-    "graphql-tools": "^0.8.3",
-    "kapton": "0.0.3",
-    "webpack": "^1.14.0",
-    "webpack-dev-server": "^1.16.2"
-  }
+ "name": "kapton-sample",
+ "version": "2.0.0",
+ "description": "",
+ "scripts": {
+   "test": "echo \"Error: no test specified\" && exit 1",
+   "postinstall": "bower install"
+ },
+ "author": "",
+ "license": "ISC",
+ "devDependencies": {
+   "apollo-client": "^0.5.18",
+   "babel-core": "^6.24.0",
+   "babel-loader": "^6.2.9",
+   "babel-preset-es2015": "^6.24.0",
+   "bower": "^1.8.0",
+   "graphql": "^0.8.2",
+   "graphql-tag": "^1.1.2",
+   "graphql-tools": "^0.8.3",
+   "kapton": "^2.0.0",
+   "polymer-cli": "^0.18.1",
+   "webpack": "^1.14.0",
+   "webpack-dev-server": "^1.16.2"
+ }
 }

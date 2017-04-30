@@ -13,7 +13,7 @@
     };
 
     // Load webcomponentsjs polyfill if browser does not support native Web Components
-    (function() {
+    /*(function() {
       'use strict';
 
       var onload = function() {
@@ -43,7 +43,7 @@
       } else {
         onload();
       }
-    })();
+    })();*/
   </script>
 
   <style>
@@ -54,6 +54,8 @@
       background: #eee;
     }
   </style>
+
+  <script src="app/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 
   <link rel="import" href="app/components/sample-app.html">
 

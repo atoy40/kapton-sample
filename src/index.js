@@ -1,5 +1,5 @@
 import ApolloClient, { toIdValue } from 'apollo-client';
-import Kapton from 'kapton';
+import Kapton, { createKaptonMixin } from 'kapton';
 import gql from 'graphql-tag';
 import { createFakeNetworkInterface } from './network';
 
@@ -81,4 +81,4 @@ const DEL_USER = gql`
   }
 `;
 
-export { graphql, USERS_LIST, SINGLE_USER, UPDATE_USER, ADD_USER, DEL_USER };
+export { graphql, createKaptonMixin, USERS_LIST, SINGLE_USER, UPDATE_USER, ADD_USER, DEL_USER };

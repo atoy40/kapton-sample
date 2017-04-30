@@ -25,13 +25,14 @@ module.exports = {
     library: "Kapton",
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/app/',
+    publicPath: '/dist/',
   },
   plugins: plugins,
   module: {
     loaders: [{
       test: /\.js$/,
-      loaders: ['babel'],
+      loaders: ['babel-loader'],
+      //exclude: /(node_modules|bower_components)/,
       include: path.join(__dirname, 'src')
     }]
   }

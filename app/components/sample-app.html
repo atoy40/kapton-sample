@@ -1,4 +1,4 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/paper-styles/default-theme.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
@@ -45,35 +45,41 @@
   </template>
 
   <script>
-    Polymer({
-      is: 'sample-app',
+    class SampleApp extends Polymer.Element {
 
-      properties: {
-        editedUser: String,
-      },
+      static get is() { return 'sample-app'; }
 
-      listeners: {
-        'message': '_displayMessage'
-      },
+      static get properties() {
+        return {
+          editedUser: String,
+        }
+      }
 
-      _onSelectUser: function(e) {
+      ready() {
+        this.addEventListener('message', (e) => this._displayMessage(e));
+        super.ready();
+      }
+
+      _onSelectUser(e) {
         if (this.editedUser === e.detail.uid) {
           this.editedUser = undefined;
         } else {
           this.editedUser = e.detail.uid;
         }
-      },
+      }
 
-      _onUserDeleted: function(e) {
+      _onUserDeleted(e) {
         if (this.editedUser === e.detail.uid) {
           this.editedUser = undefined;
         }
-      },
+      }
 
-      _displayMessage: function(e) {
+      _displayMessage(e) {
         this.$.toast.text = e.detail.msg;
         this.$.toast.open();
-      },
-    });
+      }
+    }
+
+    customElements.define(SampleApp.is, SampleApp);
   </script>
 </dom-module>

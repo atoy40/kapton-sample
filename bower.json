@@ -2,9 +2,16 @@
   "name": "kapton-sample",
   "private": true,
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.7.0",
-    "iron-elements": "PolymerElements/iron-elements#^1.0.10",
-    "paper-elements": "PolymerElements/paper-elements#^1.0.7",
-    "app-elements": "PolymerElements/app-elements#^0.10.1"
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#2.0-preview",
+    "iron-form": "PolymerElements/iron-form#2.0-preview",
+    "iron-icons": "PolymerElements/iron-icons#2.0-preview",
+    "paper-button": "PolymerElements/paper-button#2.0-preview",
+    "paper-icon-button": "PolymerElements/paper-icon-button#2.0-preview",
+    "paper-input": "PolymerElements/paper-input#2.0-preview",
+    "paper-styles": "PolymerElements/paper-styles#2.0-preview",
+    "paper-toast": "PolymerElements/paper-toast#2.0-preview",
+    "app-layout": "PolymerElements/app-layout#2.0-preview",
+    "polymer": "Polymer/polymer#^2.0.0-rc.3",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#1.0.0-rc.11"
   }
 }
