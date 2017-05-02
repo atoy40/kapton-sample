@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Kapton sample</title>
+  <title>Kapton sample (Polymer 2)</title>
 
   <script>
     // Setup Polymer options
@@ -11,6 +11,11 @@
       dom: 'shadow',
       lazyRegister: true
     };
+
+    // Load webpack bundle dynamically so it'll be not handled by polymer-cli.
+    var script = document.createElement('script');
+    script.src = 'app/bundle.js';
+    document.head.appendChild(script);
   </script>
 
   <style>
@@ -23,7 +28,6 @@
   </style>
 
   <script src="app/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-
   <link rel="import" href="app/components/sample-app.html">
 
 </head>

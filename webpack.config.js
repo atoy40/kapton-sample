@@ -48,7 +48,7 @@ module.exports = {
     library: "Kapton",
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/dist/',
+    publicPath: '/app/',
   },
   plugins: plugins,
   module: {

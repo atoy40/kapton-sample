@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "bower install",
     "serve": "node ./dev-server.js",
-    "build": "NODE_ENV=production webpack && polymer build"
+    "build": "NODE_ENV=production webpack && polymer build && cp dist/bundle.js build/production/app/"
   },
   "author": "",
   "license": "ISC",
