@@ -42,9 +42,9 @@
 
   </template>
   <script>
-    const SingleUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.SINGLE_USER, 'options');
-    const AddUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.ADD_USER, { name: 'createUser' });
-    const UpdateUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.UPDATE_USER, { name: 'updateUser' });
+    const SingleUserMixin = App.createKaptonMixin(App.graphql, App.SINGLE_USER, 'options');
+    const AddUserMixin = App.createKaptonMixin(App.graphql, App.ADD_USER, { name: 'createUser' });
+    const UpdateUserMixin = App.createKaptonMixin(App.graphql, App.UPDATE_USER, { name: 'updateUser' });
 
     class SampleUserForm extends SingleUserMixin(AddUserMixin(UpdateUserMixin(Polymer.Element))) {
 

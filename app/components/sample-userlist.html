@@ -48,8 +48,8 @@
 
   </template>
   <script>
-    const UserListMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.USERS_LIST);
-    const DelUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.DEL_USER, { name: "delete"});
+    const UserListMixin = App.createKaptonMixin(App.graphql, App.USERS_LIST);
+    const DelUserMixin = App.createKaptonMixin(App.graphql, App.DEL_USER, { name: "delete"});
 
     class SampleUserlist extends UserListMixin(DelUserMixin(Polymer.Element)) {
 

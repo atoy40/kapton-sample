@@ -21,7 +21,7 @@ var loaders = [
 
 if(process.env.NODE_ENV === "production") {
   devtool = undefined;
-  plugins.push(new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false }, comments: false}));
+  plugins.push(new webpack.optimize.UglifyJsPlugin({ mangle: true, compress: { warnings: false }, comments: false}));
   plugins.push(new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }));
   if (transform) {
     loaders = [
@@ -45,7 +45,7 @@ module.exports = {
   entry: entry,
   output: {
     libraryTarget: "var",
-    library: "Kapton",
+    library: "App",
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
     publicPath: '/app/',
