@@ -41,7 +41,7 @@ const USERS_LIST = gql`
 `;
 
 const SINGLE_USER = gql`
-  query usersList($uid: String!) {
+  query singleUser($uid: String!) {
     user(uid: $uid) {
       uid
       lastname

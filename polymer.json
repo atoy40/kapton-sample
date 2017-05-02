@@ -1,28 +1,29 @@
 {
-    "entrypoint": "index.html",
-    "sources": [
-        "app/**/*"
-    ],
-    "extraDependencies": [
-        "dist/bundle.js"
-    ],
-    "builds": [{
-        "name": "bundled",
-        "bundle": false,
-        "addServiceWorker": false,
-        "swPrecacheConfig": "./sw-precache-config.js",
-        "js": {
-            "minify": false,
-            "compile": true
-        },
-        "css": {
-            "minify": false
-        },
-        "html": {
-            "minify": false
-        }
-    }],
-    "lint": {
-        "rules": ["polymer-2"]
+  "entrypoint": "index.html",
+  "sources": [
+    "app/**/*"
+  ],
+  "extraDependencies": [
+    "dist/bundle.js"
+  ],
+  "builds": [
+    {
+      "name": "production",
+      "bundle": false,
+      "addServiceWorker": false,
+      "js": {
+          "minify": true,
+          "compile": true
+      },
+      "css": {
+          "minify": true
+      },
+      "html": {
+          "minify": true
+      }
     }
+  ],
+  "lint": {
+    "rules": ["polymer-2"]
+  }
 }

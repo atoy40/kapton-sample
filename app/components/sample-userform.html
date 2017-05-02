@@ -43,9 +43,9 @@
 
   </template>
   <script>
-    SingleUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.SINGLE_USER, 'options');
-    AddUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.ADD_USER, { name: 'createUser' });
-    UpdateUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.UPDATE_USER, { name: 'updateUser' });
+    const SingleUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.SINGLE_USER, 'options');
+    const AddUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.ADD_USER, { name: 'createUser' });
+    const UpdateUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.UPDATE_USER, { name: 'updateUser' });
 
     class SampleUserForm extends SingleUserMixin(AddUserMixin(UpdateUserMixin(Polymer.Element))) {
 
@@ -77,7 +77,7 @@
 
       _computeQueryOptions(uid) {
         if (uid === undefined) {
-          this.$.userForm.reset();
+          this._reset();
         }
 
         return  {
@@ -142,14 +142,11 @@
                 age: newUser.age,
               },
             },
-            resultBehaviors: [
-              {
-                type: 'ARRAY_INSERT',
-                resultPath: ['addUser'],
-                storePath: ['ROOT_QUERY', 'users'],
-                where: 'APPEND',
+            updateQueries: {
+              usersList: (prev, { mutationResult }) => {
+                return Object.assign({}, prev, { users: [ ...prev.users, mutationResult.data.addUser ] });
               }
-            ]
+            }
           })
           .then(function(res) {
             this.dispatchEvent(new CustomEvent('message', { detail: { msg: 'User added with UID "'+res.data.addUser.uid+'"'}, composed: true }));

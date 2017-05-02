@@ -1,6 +1,6 @@
 import Schema from './schema';
 import { graphql } from 'graphql';
-import { print } from 'graphql-tag/printer';
+import { print } from 'graphql/language/printer';
 
 class FakeNetworkInterface {
   constructor(options = {}) {

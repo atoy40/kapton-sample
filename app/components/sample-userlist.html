@@ -49,8 +49,8 @@
 
   </template>
   <script>
-    UserListMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.USERS_LIST);
-    DelUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.DEL_USER, { name: "delete"});
+    const UserListMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.USERS_LIST);
+    const DelUserMixin = Kapton.createKaptonMixin(Kapton.graphql, Kapton.DEL_USER, { name: "delete"});
 
     class SampleUserlist extends UserListMixin(DelUserMixin(Polymer.Element)) {
 
@@ -106,17 +106,12 @@
 
         this.delete({
           variables: { uid: user.uid },
-          resultBehaviors: [
-            {
-              type: 'ARRAY_DELETE',
-              dataId: 'User_'+user.uid,
-              storePath: ['ROOT_QUERY', 'users'],
-            },
-            {
-              type: 'DELETE',
-              dataId: 'User_'+user.uid,
+          updateQueries: {
+            usersList: (prev, { mutationResult }) => {
+              let uid = mutationResult.data.delUser.uid;
+              return Object.assign({}, prev, { users: prev.users.filter(user => user.uid !== uid) });
             }
-          ]
+          }
         })
         .then(function(res) {
           this.dispatchEvent(new CustomEvent('message', {detail: { msg: 'User "'+res.data.delUser.uid+'" removed' }, composed: true}));
