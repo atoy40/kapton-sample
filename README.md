@@ -38,11 +38,9 @@ python -m SimpleHTTPServer 3000
 
 Go to http://localhost:3000
 
-The files will be located in build/production
-
 ## Code layout
 
 * src : contains javascript code webpacked into a single file. This include
 Apollo client, Kapton and GraphQL endpoint and schema. In a normal app, the
-schema part (data.js and schema.js) would be only server side.
+schema part (data.js and schema.js) would be defined server side.
 * app : contains Polymer elements.
