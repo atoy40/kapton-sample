@@ -87,17 +87,17 @@
 
       _dataChanged(data) {
         if (data.user) {
-          this.shadowRoot.querySelector('paper-input[name=lastname]').value = data.user.lastname;
-          this.shadowRoot.querySelector('paper-input[name=firstname]').value = data.user.firstname;
-          this.shadowRoot.querySelector('paper-input[name=age]').value = data.user.age;
+          this.$.userForm.querySelector('paper-input[name=lastname]').value = data.user.lastname;
+          this.$.userForm.querySelector('paper-input[name=firstname]').value = data.user.firstname;
+          this.$.userForm.querySelector('paper-input[name=age]').value = data.user.age;
         }
       }
 
       _reset(e) {
         this.editUid = undefined;
-        this.shadowRoot.querySelector('paper-input[name=lastname]').value = '';
-        this.shadowRoot.querySelector('paper-input[name=firstname]').value = '';
-        this.shadowRoot.querySelector('paper-input[name=age]').value = '';
+        this.$.userForm.querySelector('paper-input[name=lastname]').value = '';
+        this.$.userForm.querySelector('paper-input[name=firstname]').value = '';
+        this.$.userForm.querySelector('paper-input[name=age]').value = '';
         //this.$.userForm.reset();
       }
 
