@@ -30,7 +30,7 @@
       <h2>Create or update user</h2>
       <iron-form id="userForm">
         <form class="layout horizontal">
-            <paper-input id="uid" style="width: 100px;" label="UID" value="{{editUid}}" disabled placeholder="New user"></paper-input>
+            <paper-input id="uid" style="width: 220px;" label="ID" value="{{editUid}}" disabled placeholder="New user"></paper-input>
             <paper-input class="flex" name="lastname" label="Lastname" required placeholder="Set lastname" disabled="{{disabled}}"></paper-input>
             <paper-input class="flex" name="firstname" label="Firstname" required placeholder="Set firstname" disabled="{{disabled}}"></paper-input>
             <paper-input style="width: 100px;" name="age" label="Age" type="number" min="1" max="120" required placeholder="Set age" disabled="{{disabled}}"></paper-input>
@@ -74,22 +74,22 @@
         }
       }
 
-      _computeQueryOptions(uid) {
-        if (uid === undefined) {
+      _computeQueryOptions(id) {
+        if (id === undefined) {
           this._reset();
         }
 
         return  {
-          variables: { uid: uid },
-          skip: !uid,
+          variables: { id: id },
+          skip: !id,
         };
       }
 
       _dataChanged(data) {
-        if (data.user) {
-          this.$.userForm.querySelector('paper-input[name=lastname]').value = data.user.lastname;
-          this.$.userForm.querySelector('paper-input[name=firstname]').value = data.user.firstname;
-          this.$.userForm.querySelector('paper-input[name=age]').value = data.user.age;
+        if (data.User) {
+          this.$.userForm.querySelector('paper-input[name=lastname]').value = data.User.lastname;
+          this.$.userForm.querySelector('paper-input[name=firstname]').value = data.User.firstname;
+          this.$.userForm.querySelector('paper-input[name=age]').value = data.User.age;
         }
       }
 
@@ -105,7 +105,12 @@
         if (!this.$.userForm.validate()) {
           return this.dispatchEvent(new CustomEvent('message', { detail: { msg: 'Check input'}, composed: true }));
         }
-        var newUser = this.$.userForm.serializeForm();
+        var serialized = this.$.userForm.serializeForm();
+        var newUser = {
+          firstname: serialized.firstname,
+          lastname: serialized.lastname,
+          age: parseInt(serialized.age),
+        };
 
         var promise;
         this.disabled = true;
@@ -113,11 +118,11 @@
         if (this.editUid) {
           // update
           promise = this.updateUser({
-            variables: { uid: this.editUid, user: newUser },
+            variables: Object.assign({ id: this.editUid }, newUser),
             optimisticResponse: {
               updateUser: {
                 __typename: 'User',
-                uid: this.editUid,
+                id: this.editUid,
                 lastname: newUser.lastname,
                 firstname: newUser.firstname,
                 age: newUser.age,
@@ -125,17 +130,17 @@
             }
           })
           .then(function(res) {
-            this.dispatchEvent(new CustomEvent('message', { detail: { msg: 'User "'+res.data.updateUser.uid+'" updated'}, composed: true }));
+            this.dispatchEvent(new CustomEvent('message', { detail: { msg: 'User "'+res.data.updateUser.id+'" updated'}, composed: true }));
             this.editUid = undefined;
           }.bind(this));
         } else {
           // create
           promise = this.createUser({
-            variables: { user: newUser },
+            variables: newUser,
             optimisticResponse: {
-              addUser: {
+              createUser: {
                 __typename: 'User',
-                uid: "-----",
+                id: "-------------------------",
                 lastname: newUser.lastname,
                 firstname: newUser.firstname,
                 age: newUser.age,
@@ -143,12 +148,13 @@
             },
             updateQueries: {
               usersList: (prev, { mutationResult }) => {
-                return Object.assign({}, prev, { users: [ ...prev.users, mutationResult.data.addUser ] });
+                console.log(mutationResult);
+                return Object.assign({}, prev, { allUsers: [ ...prev.allUsers, mutationResult.data.createUser ] });
               }
             }
           })
           .then(function(res) {
-            this.dispatchEvent(new CustomEvent('message', { detail: { msg: 'User added with UID "'+res.data.addUser.uid+'"'}, composed: true }));
+            this.dispatchEvent(new CustomEvent('message', { detail: { msg: 'User added with ID "'+res.data.createUser.id+'"'}, composed: true }));
           }.bind(this))
         }
 
@@ -159,7 +165,7 @@
         .catch(function(err) {
           console.log(err);
           this.disabled = false;
-          this.dispatchEvent(new CustomEVent('message', { detail: { msg: 'Unable to add user'}, composed: true }));
+          this.dispatchEvent(new CustomEvent('message', { detail: { msg: 'Unable to add user'}, composed: true }));
         }.bind(this));
       }
     }

@@ -1,25 +1,24 @@
-import ApolloClient, { toIdValue } from 'apollo-client';
+import ApolloClient, { toIdValue, createNetworkInterface } from 'apollo-client';
 import Kapton, { createKaptonMixin } from 'kapton';
 import gql from 'graphql-tag';
-import { createFakeNetworkInterface } from './network';
+
+const GRAPHQL_ENDPOINT = "https://api.graph.cool/simple/v1/cja83n3bb2k1o01442pm6obrw";
 
 // define unique id of User type.
 const dataIdFromObject = (result) => {
   if (result.__typename === "User") {
-    return result.__typename+'_'+result.uid;
+    return result.__typename+'_'+result.id;
   }
   return null;
 };
 
 // Create the apollo client
 const apolloClient = new ApolloClient({
-  // In a normal app, you'll probably use createNetworkInterface instead.
-  // This demo app use an in-client graphql enpoint and simulate latency
-  networkInterface: createFakeNetworkInterface({ latency: 1000 }),
+  networkInterface: createNetworkInterface({ uri: GRAPHQL_ENDPOINT }),
   dataIdFromObject,
   customResolvers: {
     Query: {
-      user: (_, args) => toIdValue(dataIdFromObject({ __typename: 'User', uid: args['uid'] })),
+      User: (_, args) => toIdValue(dataIdFromObject({ __typename: 'User', id: args['id'] })),
     }
   }
 });
@@ -31,8 +30,8 @@ const graphql = Kapton({apolloClient});
 
 const USERS_LIST = gql`
   query usersList {
-    users {
-      uid
+    allUsers {
+      id
       lastname
       firstname
       age
@@ -41,9 +40,9 @@ const USERS_LIST = gql`
 `;
 
 const SINGLE_USER = gql`
-  query singleUser($uid: String!) {
-    user(uid: $uid) {
-      uid
+  query singleUser($id: ID!) {
+    User(id: $id) {
+      id
       lastname
       firstname
       age
@@ -52,9 +51,9 @@ const SINGLE_USER = gql`
 `;
 
 const ADD_USER = gql`
-  mutation addUser($user: UserInput!) {
-    addUser(user: $user) {
-      uid
+  mutation addUser($firstname: String!, $lastname: String!, $age: Int) {
+    createUser(firstname: $firstname, lastname: $lastname, age: $age) {
+      id
       lastname
       firstname
       age
@@ -63,9 +62,9 @@ const ADD_USER = gql`
 `;
 
 const UPDATE_USER = gql`
-  mutation updateUser($uid: String!, $user: UserInput!) {
-    updateUser(uid: $uid, user: $user) {
-      uid
+  mutation updateUser($id: ID!, $firstname: String, $lastname: String, $age: Int) {
+    updateUser(id: $id, firstname: $firstname, lastname: $lastname, age: $age) {
+      id
       lastname
       firstname
       age
@@ -74,9 +73,9 @@ const UPDATE_USER = gql`
 `;
 
 const DEL_USER = gql`
-  mutation delUser($uid: String!) {
-    delUser(uid: $uid) {
-      uid
+  mutation delUser($id: ID!) {
+    deleteUser(id: $id) {
+      id
     }
   }
 `;

@@ -37,7 +37,7 @@
       <tr class="title"><td>UID</td><td>Lastname</td><td>Firstname</td><td>Age</td><td>&nbsp;</td></tr>
       <template is="dom-repeat" items="{{users}}" sort="_sortByName">
         <tr class$="{{_userRowClass(item.deleting)}}">
-          <td style="font-family: monospace;"><a href="#" on-tap="_selectUser">{{item.user.uid}}</a></td>
+          <td style="font-family: monospace;"><a href="#" on-tap="_selectUser">{{item.user.id}}</a></td>
           <td>{{item.user.lastname}}</td>
           <td>{{item.user.firstname}}</td>
           <td>{{item.user.age}}</td>
@@ -70,7 +70,7 @@
       }
 
       _generateUsers(data) {
-        return data.users.map(function(user) {
+        return data.allUsers.map(function(user) {
           return { user: user, deleting: false };
         });
       }
@@ -84,7 +84,7 @@
       }
 
       _selectUser(e) {
-        this.dispatchEvent(new CustomEvent('select-user', {detail: { uid: e.model.item.user.uid }}));
+        this.dispatchEvent(new CustomEvent('select-user', {detail: { id: e.model.item.user.id }}));
         e.preventDefault();
       }
 
@@ -101,22 +101,22 @@
       _delete(e) {
         e.model.set('item.deleting', true);
         var user = e.model.item.user;
-        this.dispatchEvent(new CustomEvent('user-deleted', {detail: { uid: user.uid }}));
+        this.dispatchEvent(new CustomEvent('user-deleted', {detail: { uid: user.id }}));
 
         this.delete({
-          variables: { uid: user.uid },
+          variables: { id: user.id },
           updateQueries: {
             usersList: (prev, { mutationResult }) => {
-              let uid = mutationResult.data.delUser.uid;
-              return Object.assign({}, prev, { users: prev.users.filter(user => user.uid !== uid) });
+              let id = mutationResult.data.deleteUser.id;
+              return Object.assign({}, prev, { allUsers: prev.allUsers.filter(user => user.id !== id) });
             }
           }
         })
         .then(function(res) {
-          this.dispatchEvent(new CustomEvent('message', {detail: { msg: 'User "'+res.data.delUser.uid+'" removed' }, composed: true}));
+          this.dispatchEvent(new CustomEvent('message', {detail: { msg: 'User "'+res.data.deleteUser.id+'" removed' }, composed: true}));
         }.bind(this))
         .catch(function(err) {
-          this.dispatchEvent(new CustomEvent('message', {detail: { msg: 'User "'+user.uid+'" not found' }, composed: true}));
+          this.dispatchEvent(new CustomEvent('message', {detail: { msg: 'User "'+user.id+'" not found' }, composed: true}));
         }.bind(this));
       }
 

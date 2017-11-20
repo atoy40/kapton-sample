@@ -10,17 +10,15 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "apollo-client": "^1.1.1",
     "babel-core": "^6.24.0",
     "babel-loader": "^6.2.9",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
-    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-env": "^1.6.1",
     "bower": "^1.8.0",
-    "graphql": "^0.9.6",
     "graphql-tag": "^2.0.0",
-    "graphql-tools": "^0.11.0",
-    "kapton": "atoy40/kapton#2.0rc",
+    "kapton": "atoy40/kapton#v2.0.0",
     "polymer-cli": "^0.18.1",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2"
