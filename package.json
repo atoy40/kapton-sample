@@ -20,6 +20,7 @@
     "graphql-tag": "^2.0.0",
     "kapton": "atoy40/kapton#v2.0.0",
     "polymer-cli": "^0.18.1",
+    "subscriptions-transport-ws": "0.5.0",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2"
   }

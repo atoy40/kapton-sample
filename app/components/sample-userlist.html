@@ -50,8 +50,9 @@
   <script>
     const UserListMixin = App.createKaptonMixin(App.graphql, App.USERS_LIST);
     const DelUserMixin = App.createKaptonMixin(App.graphql, App.DEL_USER, { name: "delete"});
+    const UserChangesMixin = App.createKaptonMixin(App.graphql, App.USER_CHANGES, { name: "updates"});
 
-    class SampleUserlist extends UserListMixin(DelUserMixin(Polymer.Element)) {
+    class SampleUserlist extends UserChangesMixin(UserListMixin(DelUserMixin(Polymer.Element))) {
 
       static get is() { return 'sample-userlist'; }
 
@@ -66,6 +67,27 @@
             type: Array,
             computed: '_generateUsers(data)',
           },
+
+          // receive changes using subscription
+          updates: {
+            type: Object,
+            observer: '_dataChanged'
+          }
+        }
+      }
+
+      _dataChanged(data) {
+        var current = App.apolloClient.readQuery({ query: App.USERS_LIST});
+
+        if (data.User.mutation === "DELETED") {
+          current.allUsers = current.allUsers.filter(user => user.id != data.User.previousValues.id);
+          App.apolloClient.writeQuery({ query: App.USERS_LIST, data: current });
+        } else if (data.User.mutation === "CREATED" || data.User.mutation === "UPDATED") {
+          if (current.allUsers.find(user => user.id === data.User.node.id) === undefined) {
+            console.log("push");
+            current.allUsers.push(data.User.node);
+            App.apolloClient.writeQuery({ query: App.USERS_LIST, data: current });
+          }
         }
       }
 

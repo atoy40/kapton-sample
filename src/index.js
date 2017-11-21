@@ -1,8 +1,10 @@
 import ApolloClient, { toIdValue, createNetworkInterface } from 'apollo-client';
+import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import Kapton, { createKaptonMixin } from 'kapton';
 import gql from 'graphql-tag';
 
 const GRAPHQL_ENDPOINT = "https://api.graph.cool/simple/v1/cja83n3bb2k1o01442pm6obrw";
+const GRAPHQL_SUB = 'wss://subscriptions.graph.cool/v1/cja83n3bb2k1o01442pm6obrw';
 
 // define unique id of User type.
 const dataIdFromObject = (result) => {
@@ -12,9 +14,27 @@ const dataIdFromObject = (result) => {
   return null;
 };
 
+// Create regular NetworkInterface by using apollo-client's API:
+const networkInterface = createNetworkInterface({
+  uri: GRAPHQL_ENDPOINT
+ });
+
+// Create WebSocket client
+const wsClient = new SubscriptionClient(GRAPHQL_SUB, {
+  reconnect: true,
+  connectionParams: {
+      // Pass any arguments you want for initialization
+  }
+});
+
+const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
+  networkInterface,
+  wsClient
+);
+
 // Create the apollo client
 const apolloClient = new ApolloClient({
-  networkInterface: createNetworkInterface({ uri: GRAPHQL_ENDPOINT }),
+  networkInterface: networkInterfaceWithSubscriptions,
   dataIdFromObject,
   customResolvers: {
     Query: {
@@ -80,4 +100,21 @@ const DEL_USER = gql`
   }
 `;
 
-export { graphql, createKaptonMixin, USERS_LIST, SINGLE_USER, UPDATE_USER, ADD_USER, DEL_USER };
+const USER_CHANGES = gql`
+  subscription userChanges {
+    User (filter: { mutation_in: [CREATED, UPDATED, DELETED] }){
+      mutation
+      previousValues {
+        id
+      }
+      node {
+        id
+        lastname
+        firstname
+        age
+      }
+    }
+  }
+`;
+
+export { apolloClient, graphql, createKaptonMixin, USERS_LIST, SINGLE_USER, UPDATE_USER, ADD_USER, DEL_USER, USER_CHANGES };

@@ -148,7 +148,6 @@
             },
             updateQueries: {
               usersList: (prev, { mutationResult }) => {
-                console.log(mutationResult);
                 return Object.assign({}, prev, { allUsers: [ ...prev.allUsers, mutationResult.data.createUser ] });
               }
             }
