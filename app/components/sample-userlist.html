@@ -34,6 +34,7 @@
     <h2>User list <paper-icon-button id="reloadBtn" icon="refresh" on-tap="_refresh"></paper-icon-button></h2>
     <h4>Click on user ID to edit it</h4>
     <table>
+      <col width="230px">
       <tr class="title"><td>ID</td><td>Lastname</td><td>Firstname</td><td>Age</td><td>&nbsp;</td></tr>
       <template is="dom-repeat" items="{{users}}" sort="_sortByName">
         <tr class$="{{_userRowClass(item.deleting)}}">

@@ -1,6 +1,19 @@
 # In the types.graphql you define your data schema
 types: ./types.graphql
 
+functions:
+  validateAge:
+    type: operationBefore
+    operation: User.create
+    handler:
+      code:
+        src: ./src/validateAge.js
+  validateUserUpdate:
+    type: operationBefore
+    operation: User.update
+    handler:
+      code:
+        src: ./src/validateAge.js
 
 # Model/Relation permissions are used to limit the API access
 # To take the burden of thinking about those while development, we
