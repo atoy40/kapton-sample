@@ -3,9 +3,6 @@ import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-trans
 import Kapton, { createKaptonMixin } from 'kapton';
 import gql from 'graphql-tag';
 
-const GRAPHQL_ENDPOINT = "https://api.graph.cool/simple/v1/cja83n3bb2k1o01442pm6obrw";
-const GRAPHQL_SUB = 'wss://subscriptions.graph.cool/v1/cja83n3bb2k1o01442pm6obrw';
-
 // define unique id of User type.
 const dataIdFromObject = (result) => {
   if (result.__typename === "User") {
@@ -15,16 +12,16 @@ const dataIdFromObject = (result) => {
 };
 
 // Create regular NetworkInterface by using apollo-client's API:
+// __SIMPLE_API_ENDPOINT__ looks similar to: `https://api.graph.cool/simple/v1/<PROJECT_ID>`
 const networkInterface = createNetworkInterface({
-  uri: GRAPHQL_ENDPOINT
+  uri: '__SIMPLE_API_ENDPOINT__',
  });
 
 // Create WebSocket client
-const wsClient = new SubscriptionClient(GRAPHQL_SUB, {
+// __SUBSCRIPTIONS_API_ENDPOINT__ looks similar to: `wss://subscriptions.graph.cool/v1/<PROJECT_ID>`
+const wsClient = new SubscriptionClient('__SUBSCRIPTIONS_API_ENDPOINT_', {
   reconnect: true,
-  connectionParams: {
-      // Pass any arguments you want for initialization
-  }
+  timeout: 20000
 });
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
@@ -117,4 +114,15 @@ const USER_CHANGES = gql`
   }
 `;
 
-export { apolloClient, graphql, createKaptonMixin, USERS_LIST, SINGLE_USER, UPDATE_USER, ADD_USER, DEL_USER, USER_CHANGES };
+// Exported variables are accessible through the "App" (eg App.graphql) global variable into the browser
+export {
+  apolloClient,
+  graphql,
+  createKaptonMixin,
+  USERS_LIST,
+  SINGLE_USER,
+  UPDATE_USER,
+  ADD_USER,
+  DEL_USER,
+  USER_CHANGES,
+};
