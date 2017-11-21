@@ -84,7 +84,6 @@
           App.apolloClient.writeQuery({ query: App.USERS_LIST, data: current });
         } else if (data.User.mutation === "CREATED" || data.User.mutation === "UPDATED") {
           if (current.allUsers.find(user => user.id === data.User.node.id) === undefined) {
-            console.log("push");
             current.allUsers.push(data.User.node);
             App.apolloClient.writeQuery({ query: App.USERS_LIST, data: current });
           }
