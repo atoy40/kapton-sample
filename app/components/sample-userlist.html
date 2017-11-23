@@ -51,9 +51,8 @@
   <script>
     const UserListMixin = App.createKaptonMixin(App.graphql, App.USERS_LIST);
     const DelUserMixin = App.createKaptonMixin(App.graphql, App.DEL_USER, { name: "delete"});
-    const UserChangesMixin = App.createKaptonMixin(App.graphql, App.USER_CHANGES, { name: "updates"});
 
-    class SampleUserlist extends UserChangesMixin(UserListMixin(DelUserMixin(Polymer.Element))) {
+    class SampleUserlist extends UserListMixin(DelUserMixin(Polymer.Element)) {
 
       static get is() { return 'sample-userlist'; }
 
@@ -61,34 +60,56 @@
         return {
 
           // raw graphql data
-          data: Object,
+          data: {
+            type: Object,
+            observer: '_dataChanged'
+          },
 
           // user data extracted and decorated
           users: {
             type: Array,
             computed: '_generateUsers(data)',
           },
-
-          // receive changes using subscription
-          updates: {
-            type: Object,
-            observer: '_dataChanged'
-          }
         }
       }
 
-      _dataChanged(data) {
-        var current = App.apolloClient.readQuery({ query: App.USERS_LIST});
-
-        if (data.User.mutation === "DELETED") {
-          current.allUsers = current.allUsers.filter(user => user.id != data.User.previousValues.id);
-          App.apolloClient.writeQuery({ query: App.USERS_LIST, data: current });
-        } else if (data.User.mutation === "CREATED" || data.User.mutation === "UPDATED") {
-          if (current.allUsers.find(user => user.id === data.User.node.id) === undefined) {
-            current.allUsers.push(data.User.node);
-            App.apolloClient.writeQuery({ query: App.USERS_LIST, data: current });
-          }
+      _dataChanged(data, olddata) {
+        if (data && !data.loading) {
+          this._subscribe(data);
         }
+      }
+
+      _subscribe(data) {
+        if (this.subscription) {
+          return;
+        }
+        
+        this.subscription = data.subscribeToMore({
+          document: App.USER_CHANGES,
+          variables: null,
+          updateQuery: (prev, {subscriptionData}) => {
+            const mutation = subscriptionData.data.User.mutation;
+
+            if (mutation === "CREATED" || mutation === "UPDATED") {
+              const newUser = subscriptionData.data.User.node;
+              if (prev.allUsers.find(user => user.id === newUser.id) === undefined) {
+                return {
+                  allUsers: [
+                    { ...newUser },
+                    ...prev.allUsers
+                  ]
+                };
+              }
+            }
+
+            if (mutation === "DELETED") {
+              const id = subscriptionData.data.User.previousValues.id;
+              return {
+                allUsers: prev.allUsers.filter(user => user.id != id)
+              };
+            }
+          }
+        });
       }
 
       _generateUsers(data) {
